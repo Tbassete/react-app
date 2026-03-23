@@ -9,6 +9,7 @@ import Logout from './Pages/logout';
 import UserDetails from './Pages/UserDetailss';
 import NewUser from './Pages/NewUser';
 import Login from './Pages/login';
+import Loading from './Pages/loading';
 
 
 const publicRoute = createBrowserRouter([{
@@ -19,6 +20,7 @@ const publicRoute = createBrowserRouter([{
     {path: '/home', element: <Home />},
     {path: '/login', element: <Login />},
     {path: '/*', element: <ErrorPage />},
+    {path: '/loading', element: <Loading />},
   ]
   }])
 

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom"
-
+import Loading from "./loading"
+import { useState } from 'react'
 function Login() {
 const navigate = useNavigate()
+const [Loading, setLoading] = useState(false)
 const fnConfirmar = async (event) => {
     event.preventDefault()
 
@@ -13,6 +15,8 @@ const fnConfirmar = async (event) => {
 
     const credentials = btoa(`${username}:${password}`)
 
+    setLoading(true)
+
     try {
         const response = await fetch(urirest, {
             headers: {
@@ -23,18 +27,18 @@ const fnConfirmar = async (event) => {
         console.log(jsonlogin)
 
         if(jsonlogin.resources.length === 1){
-          localStorage.setItem("@1app/displayname",jsonlogin.resources[0].displayName)
-          navigate('/')
-          window.location.reload()
+            localStorage.setItem("@1app/displayname", jsonlogin.resources[0].displayName)
+            navigate('/')
+            // window.location.reload()
+            return
         }
+        return
     } catch(err) {
         console.log("errou: =>", err)
-    }
+        return
+    } 
 }
 
-    const fnCancelar = (event)=>{
-
-    }
   return (
     <div className="login-wrapper">
       <div className="login-card">
@@ -82,7 +86,7 @@ const fnConfirmar = async (event) => {
           </div>
 
           <div className="forgot-wrapper">
-            <a href="#" className="forgot-link">Esqueceu a senha?</a>
+            <a href="/" className="forgot-link">Esqueceu a senha?</a>
           </div>
 
           <button type="submit" className="login-btn" onClick={(event => fnConfirmar(event))}>
