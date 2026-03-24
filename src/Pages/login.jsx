@@ -29,7 +29,7 @@ const fnConfirmar = async (event) => {
         if(jsonlogin.resources.length === 1){
             localStorage.setItem("@1app/displayname", jsonlogin.resources[0].displayName)
             navigate('/')
-            // window.location.reload()
+            window.location.reload()
             return
         }
         return
