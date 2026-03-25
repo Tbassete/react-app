@@ -1,42 +1,64 @@
 import { useNavigate } from "react-router-dom"
-import Loading from "./loading"
-import { useState } from 'react'
+import { useState } from "react"
+
 function Login() {
-const navigate = useNavigate()
-const [Loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const [erro, setErro] = useState('')
+  const [loading, setLoading] = useState(false)
+
 const fnConfirmar = async (event) => {
-    event.preventDefault()
+  event.preventDefault()
 
-    const form = event.target.form ?? event.target.closest('form')
-    const username = form.elements['username'].value
-    const password = form.elements['password'].value
+  const form = event.target.form ?? event.target.closest('form')
+  const username = form.elements['username'].value
+  const password = form.elements['password'].value
 
-    const urirest = `http://172.26.50.9:8096/rest/users?username=${username.toUpperCase()}`
+  if (!username || !password) {
+    setErro('Preencha o login e a senha.')
+    return
+  }
 
-    const credentials = btoa(`${username}:${password}`)
+  setErro('')
+  setLoading(true)
 
-    setLoading(true)
+  const urirest = `http://172.26.50.9:8096/rest/users?username=${username.toUpperCase()}`
+  const credentials = btoa(`${username}:${password}`)
 
-    try {
-        const response = await fetch(urirest, {
-            headers: {
-                'Authorization': `Basic ${credentials}`
-            }
-        })
-        const jsonlogin = await response.json()
-        console.log(jsonlogin)
+  try {
+    const response = await fetch(urirest, {
+      headers: {
+        'Authorization': `Basic ${credentials}`
+      }
+    })
 
-        if(jsonlogin.resources.length === 1){
-            localStorage.setItem("@1app/displayname", jsonlogin.resources[0].displayName)
-            navigate('/')
-            window.location.reload()
-            return
-        }
-        return
-    } catch(err) {
-        console.log("errou: =>", err)
-        return
-    } 
+    if (response.status === 401) {
+      setErro('Usuário ou senha incorretos. Tente novamente.')
+      setLoading(false)
+      return
+    }
+
+    if (!response.ok) {
+      setErro('Erro ao conectar ao servidor. Tente novamente.')
+      setLoading(false)
+      return
+    }
+
+    const jsonlogin = await response.json()
+
+    if (jsonlogin.resources && jsonlogin.resources.length === 1) {
+      localStorage.setItem("@1app/displayname", jsonlogin.resources[0].displayName)
+      navigate('/')
+      window.location.reload()
+      return
+    }
+
+    setErro('Usuário não encontrado. Verifique suas credenciais.')
+  } catch (err) {
+    console.log("errou: =>", err)
+    setErro('Não foi possível conectar ao servidor. Tente novamente.')
+  } finally {
+    setLoading(false)
+  }
 }
 
   return (
@@ -65,6 +87,7 @@ const fnConfirmar = async (event) => {
                 className="input-field"
                 name="username"
                 placeholder="seu login no protheus"
+                onChange={() => setErro('')}
               />
             </div>
           </div>
@@ -81,24 +104,41 @@ const fnConfirmar = async (event) => {
                 name="password"
                 className="input-field"
                 placeholder="••••••••"
+                onChange={() => setErro('')}
               />
             </div>
           </div>
 
-          <div className="forgot-wrapper">
-            <a href="/" className="forgot-link">Esqueceu a senha?</a>
-          </div>
+          {erro && (
+            <div className="login-erro">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <span>{erro}</span>
+            </div>
+          )}
 
-          <button type="submit" className="login-btn" onClick={(event => fnConfirmar(event))}>
-            <span>Entrar</span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
+          <button
+            type="submit"
+            className={`login-btn ${loading ? 'login-btn-loading' : ''}`}
+            onClick={(event) => fnConfirmar(event)}
+            disabled={loading}
+          >
+            {loading ? (
+              <span>Entrando...</span>
+            ) : (
+              <>
+                <span>Entrar</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </>
+            )}
           </button>
         </form>
       </div>
     </div>
-  );
+  )
 }
 
-export default Login;
+export default Login

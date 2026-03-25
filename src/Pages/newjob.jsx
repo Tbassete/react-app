@@ -64,15 +64,20 @@ useEffect(() => {
       setRespostas(inicial)
     })
     .catch(() => setCriterios([]))
-
+  fetch('http://172.26.0.180:3001/api/maquinas')
+  .then((res) => res.json())
+  .then((data) => setMaquinas(Array.isArray(data) ? data : []))
+  .catch(() => setMaquinas([]))
   if (searchProduto.length < 1) {
     setProdutos([])
     setShowDropdown(false)
     return
   }
+  
 
-  const timeout = setTimeout(() => {
-    setLoadingProdutos(true)
+  
+  // const timeout = setTimeout(() => {
+    // setLoadingProdutos(true)
     fetch(`http://172.26.0.180:3001/api/produtos?search=${searchProduto}`)
       .then((res) => res.json())
       .then((data) => {
@@ -83,15 +88,12 @@ useEffect(() => {
       })
       .catch((err) => {
         console.error(err)
-        setLoadingProdutos(false)
+        // setLoadingProdutos(false)
       })
-  }, 400)
+  // }, 400)
   
-  fetch('http://172.26.0.180:3001/api/maquinas')
-    .then((res) => res.json())
-    .then((data) => setMaquinas(Array.isArray(data) ? data : []))
-    .catch(() => setMaquinas([]))
-    return () => clearTimeout(timeout)
+
+    // return () => clearTimeout(timeout)
 }, [searchProduto])
 
   // autocomplete genérico com debounce
@@ -306,7 +308,7 @@ useEffect(() => {
                 value={form.job_supervisor}
                 onChange={handleFormChange}
               >
-                <option value="">Selecione</option>
+                <option value="">Adriano</option>
                 <option value="Silas">Silas</option>
                 <option value="Henrique">Henrique</option>
               </select>
@@ -412,9 +414,9 @@ useEffect(() => {
                 value={form.job_vistocolaborador}
                 onChange={handleFormChange}
               >
-                <option value="">Selecione</option>
+
                 <option value="S">Sim</option>
-                <option value="N">Não</option>
+
               </select>
             </div>
 
@@ -470,6 +472,7 @@ useEffect(() => {
                             value={r.desvio}
                             onChange={(e) => handleRespostaChange(c.SJB_ID, 'desvio', e.target.value)}
                             placeholder="Descreva o desvio encontrado"
+                            required
                             rows={2}
                           />
                         </div>
@@ -480,6 +483,7 @@ useEffect(() => {
                             value={r.acao}
                             onChange={(e) => handleRespostaChange(c.SJB_ID, 'acao', e.target.value)}
                             placeholder="Descreva a ação a ser tomada"
+                            required
                             rows={2}
                           />
                         </div>
