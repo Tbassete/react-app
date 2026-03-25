@@ -1,13 +1,11 @@
 {
-  "short_name": "JOB OBS1",
-  "name": "JOB OBSERVATION2",
+  "short_name": "JOB OBS2",
+  "name": "JOB OBSERVATION1",
   "description": "Web site created using create-react-app",
-    "start_url": "/",
   "display": "standalone",
+  "start_url": "/",
   "theme_color": "#000000",
   "background_color": "#000000",
-  "scope": "/",
-"start_url": "/",
   "icons": [
     {
       "src": "sapa2.png",
@@ -20,4 +18,5 @@
       "type": "image/png"
     }
   ]
+
 }

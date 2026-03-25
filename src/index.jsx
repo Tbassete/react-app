@@ -12,6 +12,7 @@ import Loading from './Pages/loading';
 import Jobs from './Pages/jobs';
 import JobDetail from './Pages/JobDetail';
 import NewJob from './Pages/newjob';
+import Criterios from './Pages/Criterios';
 const publicRoute = createBrowserRouter([{
   path: '/',
   element: <App />,
@@ -36,6 +37,7 @@ const protectedRoute = createBrowserRouter([{
     { path: '/logout', element: <Logout /> },
     { path: '/NewJob', element: <NewJob /> },
     { path: '/*', element: <ErrorPage /> },
+    { path: '/criterios', element: <Criterios /> },
   ]
 }])
 
