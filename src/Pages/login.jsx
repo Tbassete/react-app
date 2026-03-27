@@ -28,9 +28,14 @@ const fnConfirmar = async (event) => {
     const response = await fetch(urirest, {
       headers: {
         'Authorization': `Basic ${credentials}`
+        
       }
+    
     })
-
+    
+    console.log(username)
+    console.log(password)
+    console.log(credentials)
     if (response.status === 401) {
       setErro('Usuário ou senha incorretos. Tente novamente.')
       setLoading(false)
@@ -43,16 +48,26 @@ const fnConfirmar = async (event) => {
       return
     }
 
-    const jsonlogin = await response.json()
+const jsonlogin = await response.json()
 
-    if (jsonlogin.resources && jsonlogin.resources.length === 1) {
-      localStorage.setItem("@1app/displayname", jsonlogin.resources[0].displayName)
-      navigate('/')
-      window.location.reload()
-      return
-    }
+let user = null
 
-    setErro('Usuário não encontrado. Verifique suas credenciais.')
+if (jsonlogin.resources && jsonlogin.resources.length >= 1) {
+  // retorno padrão SCIM com lista
+  user = jsonlogin.resources[0]
+} else if (jsonlogin.id && jsonlogin.displayName) {
+  // retorno direto do objeto (bug do Protheus)
+  user = jsonlogin
+}
+
+if (user) {
+  localStorage.setItem("@1app/displayname", user.displayName)
+  navigate('/')
+  window.location.reload()
+  return
+}
+
+setErro('Usuário não encontrado. Verifique suas credenciais.')
   } catch (err) {
     console.log("errou: =>", err)
     setErro('Não foi possível conectar ao servidor. Tente novamente.')
