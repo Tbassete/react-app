@@ -2,14 +2,16 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
 const statusColor = (resp) => {
-  if (resp === 'S') return '#22c55e'
-  if (resp === 'N') return '#E62537'
+  const v = resp?.trim()
+  if (v === 'S') return '#22c55e'
+  if (v === 'N') return '#E62537'
   return '#94a3b8'
 }
 
 const statusLabel = (resp) => {
-  if (resp === 'S') return 'Conforme'
-  if (resp === 'N') return 'Não Conforme'
+  const v = resp?.trim()
+  if (v === 'S') return 'Conforme'
+  if (v === 'N') return 'Não Conforme'
   return 'N/A'
 }
 
@@ -78,7 +80,7 @@ function JobDetail() {
               <InfoItem label="Máquina" value={primeiro.JOB_MAQUINA} />
               <InfoItem label="Turno" value={primeiro.JOB_TURNO} />
               <InfoItem label="Horário" value={primeiro.JOB_TIMEXP} />
-              <InfoItem label="Visto Colaborador" value={primeiro.JOB_VISTOCOLABORADOR} />
+              <InfoItem label="Item" value={primeiro.JOB_ITEM} />
             </div>
           </div>
 
@@ -88,7 +90,7 @@ function JobDetail() {
               <div key={job.JOB_ID} className="detail-criterio-card">
                 <div className="detail-criterio-topo">
                   <div>
-                    <span className="detail-criterio-grupo">{job.CRITERIO_GRUPO}</span>
+                <span className="detail-criterio-grupo">{job.CRITERIO_GRUPO}</span>
                     <p className="detail-criterio-desc">{job.CRITERIO_DESCRICAO}</p>
                   </div>
                   <span

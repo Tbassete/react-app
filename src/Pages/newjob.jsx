@@ -25,11 +25,6 @@ function NewJob() {
 
   const [respostas, setRespostas] = useState({})
 
-  // estados para autocomplete de auditor
-//   const [buscaAuditor, setBuscaAuditor] = useState('')
-//   const [sugestoesAuditor, setSugestoesAuditor] = useState([])
-//   const [loadingAuditor, setLoadingAuditor] = useState(false)
-//   const timerAuditor = useRef(null)
 
   // estados para autocomplete de colaborador
   const [buscaColaborador, setBuscaColaborador] = useState('')
@@ -138,6 +133,7 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (enviando) return
     setErro(null)
 
     const naoRespondidos = criterios.filter((c) => !respostas[c.SJB_ID]?.resp1)
@@ -182,9 +178,8 @@ useEffect(() => {
       setTimeout(() => navigate('/'), 1800)
     } catch {
       setErro('Erro ao salvar. Verifique os dados e tente novamente.')
-    } finally {
       setEnviando(false)
-    }
+    } 
   }
 
   const grupos = criterios.reduce((acc, c) => {
@@ -194,6 +189,7 @@ useEffect(() => {
   }, {})
 
   const totalRespondidos = criterios.filter((c) => respostas[c.SJB_ID]?.resp1).length
+  
 
   return (
     <div className="newjob-page">
@@ -307,24 +303,33 @@ useEffect(() => {
                 name="job_supervisor"
                 value={form.job_supervisor}
                 onChange={handleFormChange}
+                required
               >
-                <option value="">Adriano</option>
+                <option value="">selecione</option>
+                <option value="Adriano" >Adriano</option>
                 <option value="Silas">Silas</option>
                 <option value="Henrique">Henrique</option>
               </select>
             </div>
 
-            <div className="newjob-field">
-              <label className="newjob-label">Gap Líder</label>
-              <input
-                className="newjob-input"
-                type="text"
-                name="job_gaplider"
-                value={form.job_gaplider}
-                onChange={handleFormChange}
-                placeholder="Nome do gap líder"
-              />
-            </div>
+<div className="newjob-field">
+  <label className="newjob-label">Gap Líder</label>
+  <select
+    className="newjob-input"
+    name="job_gaplider"
+    value={form.job_gaplider}
+    onChange={handleFormChange}
+    required
+  >
+    <option value="">Selecione</option>
+    <option value="JL">Julio Lima</option>
+    <option value="CG">Cristiano Gama</option>
+    <option value="AF">Anderson Ferreira</option>
+    <option value="LB">Laércio Benda</option>
+    <option value="EM">Ezequiel Martins</option>
+    <option value="MV">Mizael Venâncio</option>
+  </select>
+</div>
 
             {/* Máquinas do Protheus */}
             <div className="newjob-field">
@@ -334,6 +339,7 @@ useEffect(() => {
                 name="job_maquina"
                 value={form.job_maquina}
                 onChange={handleFormChange}
+                required
               >
                 <option value="">Selecione</option>
                 {maquinas.map((m) => (
@@ -351,6 +357,7 @@ useEffect(() => {
                 name="job_turno"
                 value={form.job_turno}
                 onChange={handleFormChange}
+                required
               >
                 <option value="">Selecione</option>
                 <option value="1°T">1°T</option>
@@ -406,19 +413,20 @@ useEffect(() => {
     <div className="produto-dropdown-empty">Nenhum item encontrado</div>
   )}
 </div>
-            <div className="newjob-field">
+            {/* <div className="newjob-field">
               <label className="newjob-label">Visto Colaborador</label>
               <select
                 className="newjob-input"
                 name="job_vistocolaborador"
                 value={form.job_vistocolaborador}
                 onChange={handleFormChange}
+                required
               >
 
                 <option value="S">Sim</option>
 
               </select>
-            </div>
+            </div> */}
 
           </div>
         </div>
@@ -446,20 +454,27 @@ useEffect(() => {
                     <div className="newjob-criterio-topo">
                       <p className="newjob-criterio-desc">{c.SJB_DESCRICAO}</p>
                       <div className="newjob-criterio-botoes">
-                        <button
-                          type="button"
-                          className={`newjob-resp-btn newjob-resp-sim ${r.resp1 === 'S' ? 'ativo' : ''}`}
-                          onClick={() => handleRespostaChange(c.SJB_ID, 'resp1', 'S')}
-                        >
-                          ✓ Conforme
-                        </button>
-                        <button
-                          type="button"
-                          className={`newjob-resp-btn newjob-resp-nao ${r.resp1 === 'N' ? 'ativo' : ''}`}
-                          onClick={() => handleRespostaChange(c.SJB_ID, 'resp1', 'N')}
-                        >
-                          ✗ Não Conforme
-                        </button>
+<button
+  type="button"
+  className={`newjob-resp-btn newjob-resp-sim ${r.resp1 === 'S' ? 'ativo' : ''}`}
+  onClick={() => handleRespostaChange(c.SJB_ID, 'resp1', 'S')}
+>
+  ✓ Conforme
+</button>
+<button
+  type="button"
+  className={`newjob-resp-btn newjob-resp-nao ${r.resp1 === 'N' ? 'ativo' : ''}`}
+  onClick={() => handleRespostaChange(c.SJB_ID, 'resp1', 'N')}
+>
+  ✗ Não Conforme
+</button>
+<button
+  type="button"
+  className={`newjob-resp-btn newjob-resp-na ${r.resp1 === 'NA' ? 'ativo' : ''}`}
+  onClick={() => handleRespostaChange(c.SJB_ID, 'resp1', 'NA')}
+>
+  — N/A
+</button>
                       </div>
                     </div>
 
