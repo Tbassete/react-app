@@ -23,7 +23,7 @@ function JobDetail() {
   const [erro, setErro] = useState(null)
 
   useEffect(() => {
-    fetch('http://172.26.0.180:3001/api/jobs')
+    fetch('http://172.26.0.168:3001/api/jobs')
       .then((res) => res.json())
       .then((data) => {
         const lista = Array.isArray(data) ? data : data.recordset || []
@@ -70,19 +70,30 @@ function JobDetail() {
             </div>
           </div>
 
-          <div className="detail-secao">
-            <p className="detail-secao-titulo">Dados Gerais</p>
-            <div className="detail-info-grid">
-              <InfoItem label="Auditor" value={primeiro.JOB_AUDITOR} />
-              <InfoItem label="Colaborador" value={primeiro.JOB_COLABORADOR} />
-              <InfoItem label="Supervisor" value={primeiro.JOB_SUPERVISOR} />
-              <InfoItem label="Gap Líder" value={primeiro.JOB_GAPLIDER} />
-              <InfoItem label="Máquina" value={primeiro.JOB_MAQUINA} />
-              <InfoItem label="Turno" value={primeiro.JOB_TURNO} />
-              <InfoItem label="Horário" value={primeiro.JOB_TIMEXP} />
-              <InfoItem label="Item" value={primeiro.JOB_ITEM} />
-            </div>
-          </div>
+<div className="detail-secao">
+  <p className="detail-secao-titulo">Dados Gerais</p>
+  <div className="detail-info-grid">
+    <InfoItem label="Auditor" value={primeiro.JOB_AUDITOR} />
+    <InfoItem label="Colaborador" value={primeiro.JOB_COLABORADOR} />
+    <InfoItem label="Supervisor" value={primeiro.JOB_SUPERVISOR} />
+    <InfoItem label="Gap Líder" value={primeiro.JOB_GAPLIDER} />
+    <InfoItem label="Máquina" value={primeiro.JOB_MAQUINA} />
+    <InfoItem label="Turno" value={primeiro.JOB_TURNO} />
+    <InfoItem label="Horário" value={primeiro.JOB_TIMEXP} />
+    <InfoItem label="Item" value={primeiro.JOB_ITEM} />
+  </div>
+
+  {primeiro.JOB_VISTOCOLABORADOR && (
+    <div className="detail-assinatura-wrapper">
+      <p className="detail-assinatura-label">Visto Colaborador</p>
+      <img
+        src={primeiro.JOB_VISTOCOLABORADOR}
+        alt="Assinatura do colaborador"
+        className="detail-assinatura-img"
+      />
+    </div>
+  )}
+</div>
 
           <div className="detail-secao">
             <p className="detail-secao-titulo">Critérios Avaliados</p>

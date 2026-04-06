@@ -1,7 +1,20 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
+import SignatureCanvas from 'react-signature-canvas'
+
 
 function NewJob() {
+  const sigRef = useRef(null)
+  const handleLimparAssinatura = () => {
+  sigRef.current.clear()
+  setForm((prev) => ({ ...prev, job_vistocolaborador: '' }))
+}
+
+const handleSalvarAssinatura = () => {
+  if (!sigRef.current || sigRef.current.isEmpty()) return
+  const base64 = sigRef.current.getCanvas().toDataURL('image/png')
+  setForm((prev) => ({ ...prev, job_vistocolaborador: base64 }))
+}
   const navigate = useNavigate()
   const [criterios, setCriterios] = useState([])
   const [maquinas, setMaquinas] = useState([])
@@ -38,7 +51,7 @@ const [loadingProdutos, setLoadingProdutos] = useState(false)
 useEffect(() => {
   const nomeAuditor = localStorage.getItem('@1app/displayname') || ''
 
-  fetch('http://172.26.0.180:3001/api/jobs/next-observation')
+  fetch('http://172.26.0.168:3001/api/jobs/next-observation')
     .then((res) => res.json())
     .then((data) => setForm((prev) => ({ 
       ...prev, 
@@ -47,7 +60,7 @@ useEffect(() => {
     })))
     .catch(() => setForm((prev) => ({ ...prev, job_auditor: nomeAuditor })))
 
-  fetch('http://172.26.0.180:3001/api/criterios')
+  fetch('http://172.26.0.168:3001/api/criterios')
     .then((res) => res.json())
     .then((data) => {
       const lista = Array.isArray(data) ? data : []
@@ -59,7 +72,7 @@ useEffect(() => {
       setRespostas(inicial)
     })
     .catch(() => setCriterios([]))
-  fetch('http://172.26.0.180:3001/api/maquinas')
+  fetch('http://172.26.0.168:3001/api/maquinas')
   .then((res) => res.json())
   .then((data) => setMaquinas(Array.isArray(data) ? data : []))
   .catch(() => setMaquinas([]))
@@ -73,7 +86,7 @@ useEffect(() => {
   
   // const timeout = setTimeout(() => {
     // setLoadingProdutos(true)
-    fetch(`http://172.26.0.180:3001/api/produtos?search=${searchProduto}`)
+    fetch(`http://172.26.0.168:3001/api/produtos?search=${searchProduto}`)
       .then((res) => res.json())
       .then((data) => {
         const lista = Array.isArray(data) ? data : data.recordset || []
@@ -97,7 +110,7 @@ useEffect(() => {
     if (valor.length < 2) { setSugestoes([]); return }
     setLoading(true)
     timer.current = setTimeout(() => {
-      fetch(`http://172.26.0.180:3001/api/funcionarios?busca=${encodeURIComponent(valor)}`)
+      fetch(`http://172.26.0.168:3001/api/funcionarios?busca=${encodeURIComponent(valor)}`)
         .then((res) => res.json())
         .then((data) => { setSugestoes(Array.isArray(data) ? data : []); setLoading(false) })
         .catch(() => { setSugestoes([]); setLoading(false) })
@@ -135,7 +148,10 @@ useEffect(() => {
     e.preventDefault()
     if (enviando) return
     setErro(null)
-
+    if (!form.job_vistocolaborador) {
+  setErro('A assinatura do colaborador é obrigatória.')
+  return
+}
     const naoRespondidos = criterios.filter((c) => !respostas[c.SJB_ID]?.resp1)
     if (naoRespondidos.length > 0) {
       setErro(`Responda todos os critérios antes de salvar. Faltam ${naoRespondidos.length} resposta(s).`)
@@ -147,7 +163,7 @@ useEffect(() => {
     try {
       const promises = criterios.map((c) => {
         const r = respostas[c.SJB_ID]
-        return fetch('http://172.26.0.180:3001/api/jobs', {
+        return fetch('http://172.26.0.168:3001/api/jobs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -413,20 +429,29 @@ useEffect(() => {
     <div className="produto-dropdown-empty">Nenhum item encontrado</div>
   )}
 </div>
-            {/* <div className="newjob-field">
-              <label className="newjob-label">Visto Colaborador</label>
-              <select
-                className="newjob-input"
-                name="job_vistocolaborador"
-                value={form.job_vistocolaborador}
-                onChange={handleFormChange}
-                required
-              >
 
-                <option value="S">Sim</option>
+<div className="newjob-field newjob-field-full">
+  <label className="newjob-label">
+    Visto Colaborador <span style={{ color: '#E62537' }}>*</span>
+  </label>
+  <div className={`newjob-assinatura-wrapper ${!form.job_vistocolaborador && erro ? 'newjob-assinatura-erro' : ''}`}>
+    <SignatureCanvas
+      ref={sigRef}
+      penColor="black"
+      canvasProps={{ className: 'signature-canvas' }}
+      onEnd={handleSalvarAssinatura}
+    />
+  </div>
+  <div className="newjob-assinatura-actions">
+    <button type="button" className="newjob-btn-limpar" onClick={handleLimparAssinatura}>
+      Limpar assinatura
+    </button>
+    <span className={`newjob-assinatura-status ${form.job_vistocolaborador ? 'preenchida' : ''}`}>
+      {form.job_vistocolaborador ? '✓ Assinatura capturada' : 'Aguardando assinatura...'}
+    </span>
+  </div>
+</div>
 
-              </select>
-            </div> */}
 
           </div>
         </div>

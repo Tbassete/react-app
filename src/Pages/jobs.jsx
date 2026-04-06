@@ -11,7 +11,7 @@ function Jobs() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch('http://172.26.0.180:3001/api/jobs')
+    fetch('http://172.26.0.168:3001/api/jobs')
       .then((res) => res.json())
       .then((data) => {
         const lista = Array.isArray(data) ? data : data.recordset || []
