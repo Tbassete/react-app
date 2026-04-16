@@ -51,7 +51,7 @@ const [loadingProdutos, setLoadingProdutos] = useState(false)
 useEffect(() => {
   const nomeAuditor = localStorage.getItem('@1app/displayname') || ''
 
-  fetch('http://172.26.0.168:3001/api/jobs/next-observation')
+  fetch('http://172.26.50.4:3001/api/jobs/next-observation')
     .then((res) => res.json())
     .then((data) => setForm((prev) => ({ 
       ...prev, 
@@ -60,7 +60,7 @@ useEffect(() => {
     })))
     .catch(() => setForm((prev) => ({ ...prev, job_auditor: nomeAuditor })))
 
-  fetch('http://172.26.0.168:3001/api/criterios')
+  fetch('http://172.26.50.4:3001/api/criterios')
     .then((res) => res.json())
     .then((data) => {
       const lista = Array.isArray(data) ? data : []
@@ -72,7 +72,7 @@ useEffect(() => {
       setRespostas(inicial)
     })
     .catch(() => setCriterios([]))
-  fetch('http://172.26.0.168:3001/api/maquinas')
+  fetch('http://172.26.50.4:3001/api/maquinas')
   .then((res) => res.json())
   .then((data) => setMaquinas(Array.isArray(data) ? data : []))
   .catch(() => setMaquinas([]))
@@ -86,7 +86,7 @@ useEffect(() => {
   
   // const timeout = setTimeout(() => {
     // setLoadingProdutos(true)
-    fetch(`http://172.26.0.168:3001/api/produtos?search=${searchProduto}`)
+    fetch(`http://172.26.50.4:3001/api/produtos?search=${searchProduto}`)
       .then((res) => res.json())
       .then((data) => {
         const lista = Array.isArray(data) ? data : data.recordset || []
@@ -110,7 +110,7 @@ useEffect(() => {
     if (valor.length < 2) { setSugestoes([]); return }
     setLoading(true)
     timer.current = setTimeout(() => {
-      fetch(`http://172.26.0.168:3001/api/funcionarios?busca=${encodeURIComponent(valor)}`)
+      fetch(`http://172.26.50.4:3001/api/funcionarios?busca=${encodeURIComponent(valor)}`)
         .then((res) => res.json())
         .then((data) => { setSugestoes(Array.isArray(data) ? data : []); setLoading(false) })
         .catch(() => { setSugestoes([]); setLoading(false) })
@@ -163,7 +163,7 @@ useEffect(() => {
     try {
       const promises = criterios.map((c) => {
         const r = respostas[c.SJB_ID]
-        return fetch('http://172.26.0.168:3001/api/jobs', {
+        return fetch('http://172.26.50.4:3001/api/jobs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

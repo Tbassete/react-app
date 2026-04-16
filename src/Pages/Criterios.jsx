@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // import './Criterios.css';
 
-const API = 'http://172.26.0.168:3001/api/criterios';
+const API = 'http://172.26.50.4:3001/api/criterios';
 
 export default function Criterios() {
   const [criterios, setCriterios] = useState([]);

@@ -23,7 +23,7 @@ function JobDetail() {
   const [erro, setErro] = useState(null)
 
   useEffect(() => {
-    fetch('http://172.26.0.168:3001/api/jobs')
+    fetch('http://172.26.50.4:3001/api/jobs')
       .then((res) => res.json())
       .then((data) => {
         const lista = Array.isArray(data) ? data : data.recordset || []
