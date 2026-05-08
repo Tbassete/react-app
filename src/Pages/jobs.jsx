@@ -43,6 +43,8 @@ function Jobs() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  
+
   const getPaginationRange = () => {
     const delta = 2
     const range = []
@@ -96,6 +98,11 @@ function Jobs() {
           <div className="jobs-grid">
             {gruposPaginados.map(([obsId, itens], index) => {
               const primeiro = itens[0]
+              let dataFormatada = '—'
+if (primeiro.JOB_DATA) {
+  const data = new Date(primeiro.JOB_DATA)
+  dataFormatada = new Date(data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate()).toLocaleDateString('pt-BR')
+}
               return (
                 <div
                   key={obsId}
@@ -116,7 +123,8 @@ function Jobs() {
                     <InfoItem label="Turno" value={primeiro.JOB_TURNO} />
                     <InfoItem
                       label="Data"
-                      value={new Date(primeiro.JOB_DATA).toLocaleDateString('pt-BR')}
+                      
+                      value={dataFormatada}
                     />
                     <InfoItem label="Supervisor" value={primeiro.JOB_SUPERVISOR} />
                     <InfoItem label="Gap Líder" value={primeiro.JOB_GAPLIDER} />

@@ -41,7 +41,11 @@ function JobDetail() {
   }, [obsId])
 
   const primeiro = itens[0] || {}
-
+                let dataFormatada = '—'
+if (primeiro.JOB_DATA) {
+  const data = new Date(primeiro.JOB_DATA)
+  dataFormatada = new Date(data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate()).toLocaleDateString('pt-BR')
+}
   return (
     <div className="detail-page">
       <button className="detail-btn-voltar" onClick={() => navigate(-1)}>
@@ -64,7 +68,7 @@ function JobDetail() {
             <div>
               <h1 className="detail-titulo">Observação #{obsId}</h1>
               <p className="detail-subtitulo">
-                {new Date(primeiro.JOB_DATA).toLocaleDateString('pt-BR')} •{' '}
+                {dataFormatada} •{' '}
                 {itens.length} {itens.length === 1 ? 'critério avaliado' : 'critérios avaliados'}
               </p>
             </div>

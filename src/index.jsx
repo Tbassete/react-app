@@ -36,8 +36,8 @@ const protectedRoute = createBrowserRouter([{
     { path: '/newuser', element: <NewUser /> },
     { path: '/logout', element: <Logout /> },
     { path: '/NewJob', element: <NewJob /> },
-    { path: '/*', element: <ErrorPage /> },
     { path: '/criterios', element: <Criterios /> },
+    { path: '*', element: <ErrorPage /> },
   ]
 }])
 
